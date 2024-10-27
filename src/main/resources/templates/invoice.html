@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Betriebskostenabrechnung</title>
+  <!--  <link type="text/css" href="/styles/css/main.css" rel="stylesheet"/>-->
+  <style>
+    @import "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700";
+
+    html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, total, time, mark, audio, video {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font: inherit;
+      vertical-align: baseline
+    }
+
+    article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+      display: block
+    }
+
+    body {
+      line-height: 1
+    }
+
+    ol, ul {
+      list-style: none
+    }
+
+    blockquote, q {
+      quotes: none
+    }
+
+    blockquote:before, blockquote:after, q:before, q:after {
+      content: none
+    }
+
+    table {
+      border-collapse: collapse;
+      border-spacing: 0
+    }
+
+    body {
+      height: 840px;
+      width: 592px;
+      margin: auto;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 12px
+    }
+
+    strong {
+      font-weight: 700
+    }
+
+    #container {
+      position: relative;
+      padding: 4%
+    }
+
+    #header {
+      height: 80px
+    }
+
+    #header > #reference {
+      float: right;
+      text-align: right
+    }
+
+    #header > #reference h3 {
+      margin: 0
+    }
+
+    #header > #reference h4 {
+      margin: 0;
+      font-size: 85%;
+      font-weight: 600
+    }
+
+    #header > #reference p {
+      margin: 2% 0 0;
+      font-size: 85%
+    }
+
+    #header > #logo {
+      width: 50%;
+      float: left
+    }
+
+    #fromto {
+      height: 160px
+    }
+
+    #fromto > #from, #fromto > #to {
+      width: 45%;
+      min-height: 90px;
+      margin-top: 30px;
+      font-size: 85%;
+      padding: 1.5%;
+      line-height: 120%
+    }
+
+    #fromto > #from {
+      float: right;
+      width: 45%;
+      background: #efefef;
+      margin-top: 30px;
+      font-size: 85%;
+      padding: 1.5%
+    }
+
+    #fromto > #to {
+      float: left;
+      border: solid grey 1px
+    }
+
+    #items {
+      margin-top: 10px
+    }
+
+    #items > p {
+      font-weight: 700;
+      text-align: left;
+      margin-bottom: 1%;
+      font-size: 85%
+    }
+
+    #items > table {
+      width: 100%;
+      font-size: 85%;
+      border: solid grey 1px
+    }
+
+    #items > table th:first-child {
+      text-align: left
+    }
+
+    #items > table th {
+      font-weight: 400;
+      border-bottom: solid grey 1px;
+      padding: 1px 4px
+    }
+
+    #items > table td {
+      padding: 1px 4px
+    }
+
+    #items > table th:nth-child(2), #items > table th:nth-child(4) {
+      width: 45px
+    }
+
+    #items > table th:nth-child(3) {
+      width: 60px
+    }
+
+    #items > table th:nth-child(5) {
+      width: 80px
+    }
+
+    #items > table tr td:not(:first-child) {
+      text-align: right;
+      padding-right: 1%
+    }
+
+    #items table td {
+      border-right: solid grey 1px
+    }
+
+    #items table tr td {
+      padding-top: 3px;
+      padding-bottom: 3px;
+      height: 10px
+    }
+
+    #items table tr:nth-child(1) {
+      border: solid grey 1px
+    }
+
+    #items table tr th {
+      border-right: solid grey 1px;
+      padding: 3px
+    }
+
+    #items table tr:nth-child(2) > td {
+      padding-top: 8px
+    }
+
+    #items > table tr td:nth-child(3),
+    #items > table tr td:nth-child(4) {
+      text-align: right;
+    }
+
+    #items tfoot td {
+      font-weight: 700;
+      border: solid grey 1px;
+      padding: 3px 4px;
+      text-align: right;
+    }
+
+    #summary {
+      height: 170px;
+      margin-top: 30px
+    }
+
+    #summary #note {
+      float: left
+    }
+
+    #summary #note h4 {
+      font-size: 10px;
+      font-weight: 600;
+      font-style: italic;
+      margin-bottom: 4px
+    }
+
+    #summary #note p {
+      font-size: 10px;
+      font-style: italic
+    }
+
+    #summary #total table {
+      font-size: 85%;
+      width: 260px;
+      float: right
+    }
+
+    #summary #total table td {
+      padding: 3px 4px
+    }
+
+    #summary #total table tr td:last-child {
+      text-align: right
+    }
+
+    #summary #total table tr:nth-child(4) {
+      background: #efefef;
+      font-weight: 600
+    }
+
+    #footer {
+      margin: auto;
+      position: absolute;
+      left: 4%;
+      bottom: 4%;
+      right: 4%;
+      border-top: solid grey 1px
+    }
+
+    #footer p {
+      margin-top: 1%;
+      font-size: 65%;
+      line-height: 140%;
+      text-align: center
+    }
+  </style>
+
+</head>
+<body>
+
+
+<div id="container">
+  <div id="header">
+    <div id="logo">
+      <!--      <img src="http://placehold.it/230x70&text=logo" alt="">-->
+    </div>
+    <div id="reference">
+      <h3><strong>Betriebskostenabrechnung</strong></h3>
+      <h4>Ref.: <span th:text="${#numbers.formatInteger(invoice.getId(), 10)}"></span></h4>
+      <p>Erstellungsdatum: <span
+          th:text="${#temporals.format(invoice.getCreatedAt(), 'dd.MM.yyyy')}"></span></p>
+    </div>
+  </div>
+
+  <div id="fromto">
+    <div id="from">
+      <p>
+        <span
+            th:text="${invoice.getBuilding().getLandlord().getFirstName() + ' ' + invoice.getBuilding().getLandlord().getLastName()}"></span><br/>
+        <span
+            th:text="${invoice.getBuilding().getLandlord().getAddress().getStreet()}"></span>
+        <br/>
+        <span
+            th:text="${invoice.getBuilding().getLandlord().getAddress().getZip() + ' ' + invoice.getBuilding().getLandlord().getAddress().getCity()}"></span>
+        <br/><br/>
+        Tel.: <span th:text="${invoice.getBuilding().getLandlord().getPhoneNumber()}"></span> <br/>
+        Email: <span th:text="${invoice.getBuilding().getLandlord().getEmail()}"></span> <br/>
+      </p>
+    </div>
+    <div id="to">
+      <p>
+        <span
+            th:text="${invoice.getFlat().getTenant().getFirstName() + ' ' + invoice.getFlat().getTenant().getLastName()}"></span><br/>
+        <span th:text="${invoice.getFlat().getTenant().getAddress().getStreet()}"></span><br/>
+        <span
+            th:text="${invoice.getFlat().getTenant().getAddress().getZip() + ' ' + invoice.getFlat().getTenant().getAddress().getCity()}"></span>
+      </p>
+    </div>
+  </div>
+
+  <div id="info">
+    <p>
+      <strong>Betriebskostenabrechnung für die Wohnung <span
+          th:text="${invoice.getFlat().getLocation() + ', ' + invoice.getBuilding().getAddress().getStreet() + ', ' + invoice.getBuilding().getAddress().getZip() + ' ' + invoice.getBuilding().getAddress().getCity()}"></span></strong>
+      <br/>
+      Abrechnungszeitraum: <span
+        th:text="${'1.1.' + invoice.getInvoiceForYear() + ' - 31.12.' + invoice.getInvoiceForYear()}"></span>
+      <br/>
+      <br/>
+      Wohnfläche: <span th:text="${invoice.getFlat().getSquareMeter()}"></span> m² <br/>
+      Gesamtwohnfläche: <span th:text="${invoice.getTotalSquareMeters()} "></span> m² <br/>
+      Anzahl der Wohneinheiten: <span
+        th:text="${invoice.getBuilding().getFlatList().size()}"></span> <br/>
+      Bewohner: <span th:text="${invoice.getFlat().getResidents()}"></span>
+    </p>
+  </div>
+
+  <div id="items">
+    <p>Kosten und Aufteilung:</p>
+    <table>
+      <thead>
+      <tr>
+        <th><strong>Kostenart</strong></th>
+        <th><strong>Verteilungsschlüssel</strong></th>
+        <th><strong>Kosten</strong></th>
+        <th><strong>Anteil Mieter</strong></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${invoice.getOperatingCostPerDistributionKey()}">
+        <td th:text="${item.getKey().getName()}"></td>                          <!-- Kostenart -->
+        <td th:text="${item.getKey().getDistribution().getUnit()}"></td>
+        <!-- Verteilungsschlüssel -->
+        <td th:text="${#numbers.formatCurrency(item.getKey().getAmount())}"></td>
+        <!-- Kosten -->
+        <td th:text="${#numbers.formatCurrency(item.getValue())}"></td>
+        <!-- Anteil Mieter -->
+      </tr>
+      <tr th:each="meterTotalCost : ${invoice.getMeterTotalCost()}">
+        <td th:text="${meterTotalCost.getKey().getType().getDescription()}"></td>
+        <td>nach Verbrauch</td>
+        <td th:text="${#numbers.formatInteger(invoice.getMeterDifference().get(meterTotalCost.getKey()), 3, 'DEFAULT') +  ' ' + meterTotalCost.getKey().getType().getUnit()}"></td>
+        <td th:text="${#numbers.formatCurrency(meterTotalCost.getValue())}"></td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td th:text="${#numbers.formatCurrency(invoice.getTotalCost() - invoice.getTotalColdRent())}"></td>
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div id="summary">
+<!--    <div id="note">-->
+<!--      <h4>Note :</h4>-->
+<!--    </div>-->
+    <div id="total">
+      <table>
+        <tr>
+          <td>Mietzahlung soll</td>
+          <td th:text="${#numbers.formatCurrency(invoice.getTotalCost())}"></td>
+        </tr>
+        <tr>
+          <td>Davon Miete</td>
+          <td th:text="${#numbers.formatCurrency(invoice.getTotalColdRent())}"></td>
+        </tr>
+        <tr>
+          <td>Mietzahlungen ist</td>
+          <td th:text="${#numbers.formatCurrency(invoice.getTotalWarmRentPaid())}"></td>
+        </tr>
+        <tr>
+          <td th:if="${invoice.getTotalCost() > invoice.getTotalWarmRentPaid()}">Nachzahlung</td>
+          <td th:unless="${invoice.getTotalCost() > invoice.getTotalWarmRentPaid()}">Guthaben</td>
+          <td th:text="${#numbers.formatCurrency(invoice.getTotalCost() - invoice.getTotalWarmRentPaid())}"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="footer">
+    <p>
+      <span
+          th:text="${invoice.getBuilding().getLandlord().getFirstName() + ' ' + invoice.getBuilding().getLandlord().getLastName()}"></span>
+      <br/>
+<!--      Bankverbindung <strong>DE234013489ß1ß2345</strong>-->
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
